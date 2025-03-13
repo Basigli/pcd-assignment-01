@@ -5,13 +5,17 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Hashtable;
+import java.util.Objects;
 
 public class BoidsView implements ChangeListener {
 
 	private JFrame frame;
 	private BoidsPanel boidsPanel;
 	private JSlider cohesionSlider, separationSlider, alignmentSlider;
+	private JButton startStopButton;
 	private BoidsModel model;
 	private int width, height;
 	
@@ -36,13 +40,23 @@ public class BoidsView implements ChangeListener {
         cohesionSlider = makeSlider();
         separationSlider = makeSlider();
         alignmentSlider = makeSlider();
-        
+		startStopButton = new JButton();
+        startStopButton.setText("Start");
+
+		startStopButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				startStopButton.setText(startStopButton.getText() == "Start" ? "Stop" : "Start");
+			}
+		});
+
         slidersPanel.add(new JLabel("Separation"));
         slidersPanel.add(separationSlider);
         slidersPanel.add(new JLabel("Alignment"));
         slidersPanel.add(alignmentSlider);
         slidersPanel.add(new JLabel("Cohesion"));
         slidersPanel.add(cohesionSlider);
+		slidersPanel.add(startStopButton);
 		        
 		cp.add(BorderLayout.SOUTH, slidersPanel);
 
@@ -72,6 +86,8 @@ public class BoidsView implements ChangeListener {
 		boidsPanel.repaint();
 	}
 
+
+
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		if (e.getSource() == separationSlider) {
@@ -80,10 +96,11 @@ public class BoidsView implements ChangeListener {
 		} else if (e.getSource() == cohesionSlider) {
 			var val = cohesionSlider.getValue();
 			model.setCohesionWeight(0.1*val);
-		} else {
+		} else if (e.getSource() == alignmentSlider){
 			var val = alignmentSlider.getValue();
 			model.setAlignmentWeight(0.1*val);
 		}
+
 	}
 	
 	public int getWidth() {
