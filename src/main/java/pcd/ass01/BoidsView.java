@@ -47,6 +47,8 @@ public class BoidsView implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				startStopButton.setText(startStopButton.getText() == "Start" ? "Stop" : "Start");
+				model.setIsRunning(!model.getIsRunning());
+				System.out.println(model.getIsRunning());
 			}
 		});
 

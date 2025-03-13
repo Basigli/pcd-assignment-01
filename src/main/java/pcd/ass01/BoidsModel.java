@@ -7,6 +7,7 @@ import java.util.Optional;
 public class BoidsModel {
     
     private final List<Boid> boids;
+    private boolean isRunning;
     private double separationWeight; 
     private double alignmentWeight; 
     private double cohesionWeight; 
@@ -33,7 +34,7 @@ public class BoidsModel {
         this.maxSpeed = maxSpeed;
         this.perceptionRadius = perceptionRadius;
         this.avoidRadius = avoidRadius;
-        
+        this.isRunning = false;
     	boids = new ArrayList<>();
         for (int i = 0; i < nboids; i++) {
         	P2d pos = new P2d(-width/2 + Math.random() * width, -height/2 + Math.random() * height);
@@ -79,6 +80,8 @@ public class BoidsModel {
     	this.alignmentWeight = value;
     }
 
+    public synchronized void setIsRunning(boolean isRunning) {this.isRunning = isRunning;}
+    public synchronized boolean getIsRunning() {return this.isRunning;}
     public synchronized void setCohesionWeight(double value) {
     	this.cohesionWeight = value;
     }

@@ -21,27 +21,30 @@ public class BoidsSimulator {
       
     public void runSimulation() {
     	while (true) {
-            var t0 = System.currentTimeMillis();
-    		var boids = model.getBoids();
-    		for (Boid boid : boids) {
-                boid.update(model);
-            }
-            
-    		if (view.isPresent()) {
-            	view.get().update(framerate);
-            	var t1 = System.currentTimeMillis();
-                var dtElapsed = t1 - t0;
-                var framratePeriod = 1000/FRAMERATE;
-                
-                if (dtElapsed < framratePeriod) {		
-                	try {
-                		Thread.sleep(framratePeriod - dtElapsed);
-                	} catch (Exception ex) {}
-                	framerate = FRAMERATE;
-                } else {
-                	framerate = (int) (1000/dtElapsed);
+            if (model.getIsRunning()) {
+                var t0 = System.currentTimeMillis();
+                var boids = model.getBoids();
+                for (Boid boid : boids) {
+                    boid.update(model);
                 }
-    		}
+
+                if (view.isPresent()) {
+                    view.get().update(framerate);
+                    var t1 = System.currentTimeMillis();
+                    var dtElapsed = t1 - t0;
+                    var framratePeriod = 1000/FRAMERATE;
+
+                    if (dtElapsed < framratePeriod) {
+                        try {
+                            Thread.sleep(framratePeriod - dtElapsed);
+                        } catch (Exception ex) {}
+                        framerate = FRAMERATE;
+                    } else {
+                        framerate = (int) (1000/dtElapsed);
+                    }
+                }
+            }
+
             
     	}
     }
