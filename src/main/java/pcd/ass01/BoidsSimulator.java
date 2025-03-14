@@ -32,11 +32,11 @@ public class BoidsSimulator {
                     view.get().update(framerate);
                     var t1 = System.currentTimeMillis();
                     var dtElapsed = t1 - t0;
-                    var framratePeriod = 1000/FRAMERATE;
+                    var frameratePeriod = 1000/FRAMERATE;
 
-                    if (dtElapsed < framratePeriod) {
+                    if (dtElapsed < frameratePeriod) {
                         try {
-                            Thread.sleep(framratePeriod - dtElapsed);
+                            Thread.sleep(frameratePeriod - dtElapsed);
                         } catch (Exception ex) {}
                         framerate = FRAMERATE;
                     } else {
@@ -44,8 +44,6 @@ public class BoidsSimulator {
                     }
                 }
             }
-
-            
     	}
     }
 }

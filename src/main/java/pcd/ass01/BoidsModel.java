@@ -8,7 +8,8 @@ public class BoidsModel {
     
     private final List<Boid> boids;
     private boolean isRunning;
-    private double separationWeight; 
+    private double separationWeight;
+
     private double alignmentWeight; 
     private double cohesionWeight; 
     private final double width;
@@ -36,14 +37,34 @@ public class BoidsModel {
         this.avoidRadius = avoidRadius;
         this.isRunning = false;
     	boids = new ArrayList<>();
+        generateBoids(nboids);
+    }
+
+    private void generateBoids(int nboids) {
         for (int i = 0; i < nboids; i++) {
-        	P2d pos = new P2d(-width/2 + Math.random() * width, -height/2 + Math.random() * height);
-        	V2d vel = new V2d(Math.random() * maxSpeed/2 - maxSpeed/4, Math.random() * maxSpeed/2 - maxSpeed/4);
-        	boids.add(new Boid(pos, vel));
+            P2d pos = new P2d(-width/2 + Math.random() * width, -height/2 + Math.random() * height);
+            V2d vel = new V2d(Math.random() * maxSpeed/2 - maxSpeed/4, Math.random() * maxSpeed/2 - maxSpeed/4);
+            boids.add(new Boid(pos, vel));
+        }
+    }
+
+    public synchronized void setNboids(int nboids) {
+
+        int currentNboids = this.boids.size();
+        System.out.println(currentNboids);
+        if (nboids > currentNboids)
+            generateBoids(nboids - currentNboids);
+        else {
+            System.out.println("removing " + (currentNboids -  nboids) + " items");
+            if ((currentNboids - nboids) > 0) {
+                boids.subList(0, (currentNboids - nboids)).clear();
+            }
         }
 
     }
-    
+    public synchronized int getNboids() {return boids.size();}
+
+
     public synchronized List<Boid> getBoids(){
     	return boids;
     }

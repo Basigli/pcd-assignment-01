@@ -7,6 +7,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventListener;
 import java.util.Hashtable;
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ public class BoidsView implements ChangeListener {
 	private BoidsPanel boidsPanel;
 	private JSlider cohesionSlider, separationSlider, alignmentSlider;
 	private JButton startStopButton;
+	private JTextField boidsNumberInput;
 	private BoidsModel model;
 	private int width, height;
 	
@@ -35,22 +37,32 @@ public class BoidsView implements ChangeListener {
         boidsPanel = new BoidsPanel(this, model);
 		cp.add(BorderLayout.CENTER, boidsPanel);
 
+		JPanel controlPanel = new JPanel();
         JPanel slidersPanel = new JPanel();
-        
+
+
         cohesionSlider = makeSlider();
         separationSlider = makeSlider();
         alignmentSlider = makeSlider();
 		startStopButton = new JButton();
         startStopButton.setText("Start");
+		boidsNumberInput = new JTextField(10);
+		boidsNumberInput.setEnabled(true);
+		boidsNumberInput.addActionListener(e -> {
+            String input = boidsNumberInput.getText();
+            model.setNboids(Integer.valueOf(input));
+        });
 
-		startStopButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				startStopButton.setText(startStopButton.getText() == "Start" ? "Stop" : "Start");
-				model.setIsRunning(!model.getIsRunning());
-				System.out.println(model.getIsRunning());
-			}
-		});
+		startStopButton.addActionListener(e -> {
+            startStopButton.setText(startStopButton.getText() == "Start" ? "Stop" : "Start");
+            model.setIsRunning(!model.getIsRunning());
+            boidsNumberInput.setEnabled(!model.getIsRunning());
+        });
+
+
+		controlPanel.add(startStopButton);
+		controlPanel.add(new JLabel("Boids number"));
+		controlPanel.add(boidsNumberInput);
 
         slidersPanel.add(new JLabel("Separation"));
         slidersPanel.add(separationSlider);
@@ -58,10 +70,9 @@ public class BoidsView implements ChangeListener {
         slidersPanel.add(alignmentSlider);
         slidersPanel.add(new JLabel("Cohesion"));
         slidersPanel.add(cohesionSlider);
-		slidersPanel.add(startStopButton);
-		        
-		cp.add(BorderLayout.SOUTH, slidersPanel);
 
+		cp.add(BorderLayout.SOUTH, slidersPanel);
+		cp.add(BorderLayout.NORTH, controlPanel);
 		frame.setContentPane(cp);	
 		
         frame.setVisible(true);

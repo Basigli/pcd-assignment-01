@@ -42,7 +42,7 @@ public class BoidsPanel extends JPanel {
         }
         
         g.setColor(Color.BLACK);
-        g.drawString("Num. Boids: " + boids.size(), 10, 25);
+        g.drawString("Num. Boids: " + model.getNboids(), 10, 25);
         g.drawString("Framerate: " + framerate, 10, 40);
    }
 }
