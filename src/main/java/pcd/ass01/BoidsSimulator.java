@@ -1,6 +1,7 @@
 package pcd.ass01;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class BoidsSimulator {
@@ -8,7 +9,7 @@ public class BoidsSimulator {
     private BoidsModel model;
     private Optional<BoidsView> view;
 
-    private static final int FRAMERATE = 60; //25
+    private static final int FRAMERATE = 25; //25
     private int framerate;
     
     public BoidsSimulator(BoidsModel model) {
@@ -29,16 +30,34 @@ public class BoidsSimulator {
 
                 int cores = Runtime.getRuntime().availableProcessors();
                 //int cores = 1;
-                var workers = new ArrayList<BoidWorker>();
+                var velocityWorkers = new ArrayList<BoidVelocityWorker>();
+                var positionWorkers = new ArrayList<BoidPositionWorker>();
+
+                List<List<Boid>> partitions = new ArrayList<>();
 
                 for (int i = 0; i < cores; i++) {
-                    var worker = new BoidWorker(boids.subList(i * (boids.size() / cores), (boids.size() / cores) * (i + 1) - 1), model);
-                    worker.start();
-                    workers.add(worker);
+                    partitions.add(boids.subList(i * (boids.size() / cores), (boids.size() / cores) * (i + 1)));
                 }
 
+                for (List<Boid> partition : partitions) {
+                    var velocityWorker = new BoidVelocityWorker(partition, model);
+                    velocityWorker.start();
+                    velocityWorkers.add(velocityWorker);
+                }
+                for (var worker : velocityWorkers) {
+                    try {
+                        worker.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 
-                for (var worker : workers) {
+                for (List<Boid> partition : partitions) {
+                    var positionWorker = new BoidPositionWorker(partition, model);
+                    positionWorker.start();
+                    positionWorkers.add(positionWorker);
+                }
+                for (var worker : positionWorkers) {
                     try {
                         worker.join();
                     } catch (InterruptedException e) {
