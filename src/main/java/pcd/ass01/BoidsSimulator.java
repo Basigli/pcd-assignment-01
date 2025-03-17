@@ -1,12 +1,13 @@
 package pcd.ass01;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class BoidsSimulator {
 
     private BoidsModel model;
     private Optional<BoidsView> view;
-    
+
     private static final int FRAMERATE = 25;
     private int framerate;
     
@@ -24,9 +25,27 @@ public class BoidsSimulator {
             if (model.getIsRunning()) {
                 var t0 = System.currentTimeMillis();
                 var boids = model.getBoids();
-                for (Boid boid : boids) {
-                    boid.update(model);
+
+
+                int cores = Runtime.getRuntime().availableProcessors();
+                //int cores = 1;
+                var workers = new ArrayList<BoidWorker>();
+
+                for (int i = 0; i < cores; i++) {
+                    var worker = new BoidWorker(boids.subList(i * (boids.size() / cores), (boids.size() / cores) * (i + 1) - 1), model);
+                    worker.start();
+                    workers.add(worker);
                 }
+
+
+                for (var worker : workers) {
+                    try {
+                        worker.join();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
 
                 if (view.isPresent()) {
                     view.get().update(framerate);
