@@ -11,10 +11,10 @@ public class BoidsParallelSimulator {
     private Optional<BoidsView> view;
     private final int CORES = Runtime.getRuntime().availableProcessors();
 
-    private final CyclicBarrier velocityBarrier = new CyclicBarrier(CORES,
-            () -> System.out.println("Velocity updated!"));
-    private final CyclicBarrier positionBarrier = new CyclicBarrier(CORES,
-            () -> System.out.println("Position updated!"));
+    private final CyclicBarrier velocityBarrier = new CyclicBarrier(CORES/*,
+            () -> System.out.println("Velocity updated!")*/);
+    private final CyclicBarrier positionBarrier = new CyclicBarrier(CORES/*,
+            () -> System.out.println("Position updated!")*/);
     private static final int FRAMERATE = 25; //25
     private int framerate;
 
@@ -32,10 +32,10 @@ public class BoidsParallelSimulator {
         List<BoidUpdateWorker> boidUpdateWorkers = new ArrayList<BoidUpdateWorker>();
         var boids = model.getBoids();
         for (int i = 0; i < CORES; i++) {
-            boidUpdateWorkers.add(new BoidUpdateWorker(boids.subList(i * (boids.size() / CORES), (boids.size() / CORES) * (i + 1)), model, velocityBarrier, positionBarrier));
+            boidUpdateWorkers.add(new BoidUpdateWorker(CORES, i, model, velocityBarrier, positionBarrier));
         }
         for (var worker : boidUpdateWorkers) {
-            worker.attachView(view.isPresent() ? view.get() : null);
+            worker.attachView(view.orElse(null));
             worker.start();
         }
 

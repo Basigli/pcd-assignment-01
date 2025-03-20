@@ -6,16 +6,19 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 public class BoidUpdateWorker extends Thread{
-    private List<Boid> boids;
+    private int numberOfThreds;
+    private int threadIndex;
+
     private BoidsModel model;
     Optional<BoidsView> view;
     private static final int FRAMERATE = 25; //25
     private int framerate;
     private final CyclicBarrier velocityBarrier;
     private final CyclicBarrier positionBarrier;
-    public BoidUpdateWorker(List<Boid> boids, BoidsModel model, CyclicBarrier velocityBarrier, CyclicBarrier positionBarrier) {
+    public BoidUpdateWorker(int numberOfThreads, int threadIndex, BoidsModel model, CyclicBarrier velocityBarrier, CyclicBarrier positionBarrier) {
         super();
-        this.boids = boids;
+        this.numberOfThreds = numberOfThreads;
+        this.threadIndex = threadIndex;
         this.model = model;
         this.velocityBarrier = velocityBarrier;
         this.positionBarrier = positionBarrier;
@@ -31,6 +34,8 @@ public class BoidUpdateWorker extends Thread{
         boolean firstTime = true;
         while (true) {
             if (model.getIsRunning()) {
+                var boidsNumber = model.getNboids();
+                var boids = model.getBoids(threadIndex * (boidsNumber / numberOfThreds),(boidsNumber / numberOfThreds) * (threadIndex + 1));
                 var t0 = System.currentTimeMillis();
 
                 if (firstTime) {

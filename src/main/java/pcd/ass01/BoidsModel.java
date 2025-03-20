@@ -68,6 +68,9 @@ public class BoidsModel {
     public List<Boid> getBoids(){
     	return boids;
     }
+    public synchronized List<Boid> getBoids(int lowerBound, int upperBound){
+        return boids.subList(lowerBound, upperBound);
+    }
     
     public double getMinX() {
     	return -width/2;
