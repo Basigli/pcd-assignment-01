@@ -11,9 +11,9 @@ public class BoidUpdateWorker extends Thread{
 
     private BoidsModel model;
 
-    private final CyclicBarrier velocityBarrier;
-    private final CyclicBarrier positionBarrier;
-    public BoidUpdateWorker(int numberOfThreads, int threadIndex, BoidsModel model, CyclicBarrier velocityBarrier, CyclicBarrier positionBarrier) {
+    private final MyCyclicBarrier velocityBarrier;
+    private final MyCyclicBarrier positionBarrier;
+    public BoidUpdateWorker(int numberOfThreads, int threadIndex, BoidsModel model, MyCyclicBarrier velocityBarrier, MyCyclicBarrier positionBarrier) {
         super();
         this.numberOfThreds = numberOfThreads;
         this.threadIndex = threadIndex;
@@ -39,7 +39,7 @@ public class BoidUpdateWorker extends Thread{
                         positionBarrier.await();
                         for (var boid : boids)
                             boid.updateVelocity(model);
-                    } catch (InterruptedException | BrokenBarrierException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -48,7 +48,7 @@ public class BoidUpdateWorker extends Thread{
                     velocityBarrier.await();
                     for (var boid : boids)
                         boid.updatePos(model);
-                } catch (InterruptedException | BrokenBarrierException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }

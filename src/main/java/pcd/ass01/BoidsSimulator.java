@@ -20,7 +20,7 @@ public class BoidsSimulator {
     public void attachView(BoidsView view) {
     	this.view = Optional.of(view);
     }
-      
+
     public void runSimulation() {
     	while (true) {
             if (model.getIsRunning()) {
