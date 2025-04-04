@@ -5,17 +5,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.EventListener;
 import java.util.Hashtable;
-import java.util.Objects;
 
 public class BoidsView implements ChangeListener {
 
 	private JFrame frame;
 	private BoidsPanel boidsPanel;
 	private JSlider cohesionSlider, separationSlider, alignmentSlider;
+	private JButton pauseResumeButton;
 	private JButton startStopButton;
 	private JTextField boidsNumberInput;
 	private BoidsModel model;
@@ -44,8 +41,11 @@ public class BoidsView implements ChangeListener {
         cohesionSlider = makeSlider();
         separationSlider = makeSlider();
         alignmentSlider = makeSlider();
+		pauseResumeButton = new JButton();
+        pauseResumeButton.setText("Resume");
 		startStopButton = new JButton();
-        startStopButton.setText("Start");
+		startStopButton.setText("Start");
+
 		boidsNumberInput = new JTextField(10);
 		boidsNumberInput.setEnabled(true);
 		boidsNumberInput.addActionListener(e -> {
@@ -53,17 +53,20 @@ public class BoidsView implements ChangeListener {
             model.setNboids(Integer.valueOf(input));
         });
 
-		startStopButton.addActionListener(e -> {
-            startStopButton.setText(startStopButton.getText() == "Start" ? "Stop" : "Start");
+		pauseResumeButton.addActionListener(e -> {
+            pauseResumeButton.setText(pauseResumeButton.getText() == "Resume" ? "Pause" : "Resume");
             model.setIsRunning(!model.getIsRunning());
             boidsNumberInput.setEnabled(!model.getIsRunning());
         });
 
+		startStopButton.addActionListener(e -> {
+			startStopButton.setText(startStopButton.getText() == "Start" ? "Stop" : "Start");
+		});
 
 		controlPanel.add(startStopButton);
+		controlPanel.add(pauseResumeButton);
 		controlPanel.add(new JLabel("Boids number"));
 		controlPanel.add(boidsNumberInput);
-
         slidersPanel.add(new JLabel("Separation"));
         slidersPanel.add(separationSlider);
         slidersPanel.add(new JLabel("Alignment"));
