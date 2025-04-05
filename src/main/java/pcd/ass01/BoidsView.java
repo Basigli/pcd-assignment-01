@@ -8,7 +8,6 @@ import javax.swing.event.ChangeListener;
 
 import java.awt.*;
 import java.util.Hashtable;
-import java.util.Objects;
 
 public class BoidsView implements ChangeListener {
 
@@ -20,9 +19,12 @@ public class BoidsView implements ChangeListener {
 	private JTextField boidsNumberInput;
 	private BoidsModel model;
 	private int width, height;
+
+	private BoidsParallelSimulator simulator;
 	
-	public BoidsView(BoidsModel model, int width, int height) {
+	public BoidsView(BoidsModel model, BoidsParallelSimulator simulator, int width, int height) {
 		this.model = model;
+		this.simulator = simulator;
 		this.width = width;
 		this.height = height;
 
@@ -54,23 +56,34 @@ public class BoidsView implements ChangeListener {
 		boidsNumberInput.setEnabled(true);
 		boidsNumberInput.addActionListener(e -> {
             String input = boidsNumberInput.getText();
-            model.setNboids(Integer.valueOf(input));
+            model.setNboids(Integer.parseInt(input));
         });
 
 		pauseResumeButton.addActionListener(e -> {
-            pauseResumeButton.setText(pauseResumeButton.getText().equals("Resume") ? "Pause" : "Resume");
-            model.setIsRunning(!model.getIsRunning());
-            boidsNumberInput.setEnabled(!model.getIsRunning());
+            if (pauseResumeButton.getText().equals("Resume")){
+				simulator.notifyResumed();
+				boidsNumberInput.setEnabled(false);
+			} else if (pauseResumeButton.getText().equals("Pause")) {
+				simulator.notifyStopped();
+				boidsNumberInput.setEnabled(true);
+			}
+			pauseResumeButton.setText(pauseResumeButton.getText().equals("Resume") ? "Pause" : "Resume");
+            // model.setIsRunning(!model.getIsRunning());
+
         });
 
 		startResetButton.addActionListener(e -> {
 			if(startResetButton.getText().equals("Start")) {
+				simulator.notifyStarted();
 				startResetButton.setText("Reset");
-				model.setIsRunning(true);
+				// model.setIsRunning(true);
 				pauseResumeButton.setEnabled(true);
-
-			} else {
-				// reset the simulation
+				boidsNumberInput.setEnabled(false);
+			} else if (startResetButton.getText().equals("Reset")){
+				simulator.notifyResetted();
+				startResetButton.setText("Start");
+				boidsNumberInput.setEnabled(true);
+				pauseResumeButton.setEnabled(false);
 			}
 
 		});

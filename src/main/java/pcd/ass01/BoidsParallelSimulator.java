@@ -1,6 +1,7 @@
 package pcd.ass01;
 
 import pcd.ass01.model.BoidsModel;
+import pcd.ass01.model.Flag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,37 +19,49 @@ public class BoidsParallelSimulator {
     private int framerate;
     private long t0 = System.currentTimeMillis();
 
+    private Flag resetFlag;
+    private Flag pauseFlag;
+
     public BoidsParallelSimulator(BoidsModel model) {
         this.model = model;
-        view = Optional.empty();
+        this.view = Optional.empty();
+        this.resetFlag = new Flag();
+        this.pauseFlag = new Flag();
     }
 
     public void attachView(BoidsView view) {
         this.view = Optional.of(view);
     }
 
-    public void runSimulation() {
 
+    public synchronized void notifyStarted() {
         List<BoidUpdateWorker> boidUpdateWorkers = new ArrayList<BoidUpdateWorker>();
+        int nBoids = model.getNboids();
+        model.setNboids(0);
+        model.setNboids(nBoids);
         var boids = model.getBoids();
+        pauseFlag.reset();
         for (int i = 0; i < THREAD_NUMBER; i++) {
-            boidUpdateWorkers.add(new BoidUpdateWorker(THREAD_NUMBER, i, model, velocityBarrier, positionBarrier));
+            boidUpdateWorkers.add(new BoidUpdateWorker(THREAD_NUMBER, i, model, velocityBarrier, positionBarrier, resetFlag, pauseFlag));
         }
         for (var worker : boidUpdateWorkers) {
             worker.start();
         }
+    }
 
-        for (var worker : boidUpdateWorkers) {
-            try {
-                worker.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public synchronized void notifyStopped() {
+        pauseFlag.set();
+    }
+
+    public synchronized void notifyResumed() {
+        pauseFlag.reset();
+    }
+
+    public synchronized void notifyResetted() {
+        resetFlag.set();
     }
 
     private void updateView(){
-        System.out.println("Updating view");
         if (view.isPresent()) {
             view.get().update(framerate);
             var t1 = System.currentTimeMillis();

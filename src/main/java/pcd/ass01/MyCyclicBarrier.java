@@ -21,7 +21,6 @@ public class MyCyclicBarrier {
     public void await() throws InterruptedException {
         mutex.acquire();
         count++;
-        System.out.println("New count value: " + count);
         if (count == parties) {
             reset.acquire();
             if (barrierAction != null) {

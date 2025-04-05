@@ -10,7 +10,6 @@ import java.util.List;
 public class BoidsModel {
     
     private final List<Boid> boids;
-    private boolean isRunning;
     private double separationWeight;
 
     private double alignmentWeight; 
@@ -38,7 +37,6 @@ public class BoidsModel {
         this.maxSpeed = maxSpeed;
         this.perceptionRadius = perceptionRadius;
         this.avoidRadius = avoidRadius;
-        this.isRunning = false;
     	boids = new ArrayList<>();
         generateBoids(nboids);
     }
@@ -47,13 +45,14 @@ public class BoidsModel {
         for (int i = 0; i < nboids; i++) {
             P2d pos = new P2d(-width/2 + Math.random() * width, -height/2 + Math.random() * height);
             V2d vel = new V2d(Math.random() * maxSpeed/2 - maxSpeed/4, Math.random() * maxSpeed/2 - maxSpeed/4);
+
             boids.add(new Boid(pos, vel));
         }
     }
 
     public synchronized void setNboids(int nboids) {
         int currentNboids = this.boids.size();
-        System.out.println(currentNboids);
+
         if (nboids > currentNboids)
             generateBoids(nboids - currentNboids);
         else {
@@ -62,7 +61,6 @@ public class BoidsModel {
                 boids.subList(0, (currentNboids - nboids)).clear();
             }
         }
-
     }
     public synchronized int getNboids() {return boids.size();}
 
@@ -106,8 +104,6 @@ public class BoidsModel {
     	this.alignmentWeight = value;
     }
 
-    public synchronized void setIsRunning(boolean isRunning) {this.isRunning = isRunning;}
-    public synchronized boolean getIsRunning() {return this.isRunning;}
     public synchronized void setCohesionWeight(double value) {
     	this.cohesionWeight = value;
     }
