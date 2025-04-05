@@ -34,8 +34,8 @@ public class BoidsPanel extends JPanel {
 
         g.setColor(Color.BLUE);
         for (Boid boid : boids) {
-        	var x = boid.getPos().x();
-        	var y = boid.getPos().y();
+        	var x = boid.getPos().x;
+        	var y = boid.getPos().y;
         	int px = (int)(w/2 + x*xScale);
         	int py = (int)(h/2 - y*xScale);
             g.fillOval(px,py, 5, 5);

@@ -49,10 +49,10 @@ public class Boid {
         
         /* environment wrap-around */
         
-        if (pos.x() < model.getMinX()) pos = pos.sum(new V2d(model.getWidth(), 0));
-        if (pos.x() >= model.getMaxX()) pos = pos.sum(new V2d(-model.getWidth(), 0));
-        if (pos.y() < model.getMinY()) pos = pos.sum(new V2d(0, model.getHeight()));
-        if (pos.y() >= model.getMaxY()) pos = pos.sum(new V2d(0, -model.getHeight()));
+        if (pos.x < model.getMinX()) pos = pos.sum(new V2d(model.getWidth(), 0));
+        if (pos.x >= model.getMaxX()) pos = pos.sum(new V2d(-model.getWidth(), 0));
+        if (pos.y < model.getMinY()) pos = pos.sum(new V2d(0, model.getHeight()));
+        if (pos.y >= model.getMaxY()) pos = pos.sum(new V2d(0, -model.getHeight()));
     }
     public void updateVelocity(BoidsModel model) {
 
@@ -85,10 +85,10 @@ public class Boid {
 
         /* environment wrap-around */
 
-        if (pos.x() < model.getMinX()) pos = pos.sum(new V2d(model.getWidth(), 0));
-        if (pos.x() >= model.getMaxX()) pos = pos.sum(new V2d(-model.getWidth(), 0));
-        if (pos.y() < model.getMinY()) pos = pos.sum(new V2d(0, model.getHeight()));
-        if (pos.y() >= model.getMaxY()) pos = pos.sum(new V2d(0, -model.getHeight()));
+        if (pos.x < model.getMinX()) pos = pos.sum(new V2d(model.getWidth(), 0));
+        if (pos.x >= model.getMaxX()) pos = pos.sum(new V2d(-model.getWidth(), 0));
+        if (pos.y < model.getMinY()) pos = pos.sum(new V2d(0, model.getHeight()));
+        if (pos.y >= model.getMaxY()) pos = pos.sum(new V2d(0, -model.getHeight()));
     }
     private List<Boid> getNearbyBoids(BoidsModel model) {
     	var list = new ArrayList<Boid>();
@@ -110,12 +110,12 @@ public class Boid {
         if (nearbyBoids.size() > 0) {
 	        for (Boid other : nearbyBoids) {
 	        	V2d otherVel = other.getVel();
-	            avgVx += otherVel.x();
-	            avgVy += otherVel.y();
+	            avgVx += otherVel.x;
+	            avgVy += otherVel.y;
 	        }	        
 	        avgVx /= nearbyBoids.size();
 	        avgVy /= nearbyBoids.size();
-	        return new V2d(avgVx - vel.x(), avgVy - vel.y()).getNormalized();
+	        return new V2d(avgVx - vel.x, avgVy - vel.y).getNormalized();
         } else {
         	return new V2d(0, 0);
         }
@@ -127,12 +127,12 @@ public class Boid {
         if (nearbyBoids.size() > 0) {
 	        for (Boid other: nearbyBoids) {
 	        	P2d otherPos = other.getPos();
-	            centerX += otherPos.x();
-	            centerY += otherPos.y();
+	            centerX += otherPos.x;
+	            centerY += otherPos.y;
 	        }
             centerX /= nearbyBoids.size();
             centerY /= nearbyBoids.size();
-            return new V2d(centerX - pos.x(), centerY - pos.y()).getNormalized();
+            return new V2d(centerX - pos.x, centerY - pos.y).getNormalized();
         } else {
         	return new V2d(0, 0);
         }
@@ -146,8 +146,8 @@ public class Boid {
         	P2d otherPos = other.getPos();
     	    double distance = pos.distance(otherPos);
     	    if (distance < model.getAvoidRadius()) {
-    	    	dx += pos.x() - otherPos.x();
-    	    	dy += pos.y() - otherPos.y();
+    	    	dx += pos.x - otherPos.x;
+    	    	dy += pos.y - otherPos.y;
     	    	count++;
     	    }
     	}

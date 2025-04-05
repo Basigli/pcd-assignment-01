@@ -76,8 +76,7 @@ public class BoidsView implements ChangeListener {
 
 		cp.add(BorderLayout.SOUTH, slidersPanel);
 		cp.add(BorderLayout.NORTH, controlPanel);
-		frame.setContentPane(cp);	
-		
+		frame.setContentPane(cp);
         frame.setVisible(true);
 	}
 
