@@ -1,5 +1,7 @@
 package pcd.ass01;
 
+import pcd.ass01.model.BoidsModel;
+
 public class BoidsSimulation {
 
 	final static int N_BOIDS = 1500;

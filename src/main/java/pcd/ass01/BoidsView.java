@@ -1,11 +1,14 @@
 package pcd.ass01;
 
+import pcd.ass01.model.BoidsModel;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.awt.*;
 import java.util.Hashtable;
+import java.util.Objects;
 
 public class BoidsView implements ChangeListener {
 
@@ -13,7 +16,7 @@ public class BoidsView implements ChangeListener {
 	private BoidsPanel boidsPanel;
 	private JSlider cohesionSlider, separationSlider, alignmentSlider;
 	private JButton pauseResumeButton;
-	private JButton startStopButton;
+	private JButton startResetButton;
 	private JTextField boidsNumberInput;
 	private BoidsModel model;
 	private int width, height;
@@ -22,7 +25,7 @@ public class BoidsView implements ChangeListener {
 		this.model = model;
 		this.width = width;
 		this.height = height;
-		
+
 		frame = new JFrame("Boids Simulation");
         frame.setSize(width, height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,9 +45,10 @@ public class BoidsView implements ChangeListener {
         separationSlider = makeSlider();
         alignmentSlider = makeSlider();
 		pauseResumeButton = new JButton();
-        pauseResumeButton.setText("Resume");
-		startStopButton = new JButton();
-		startStopButton.setText("Start");
+        pauseResumeButton.setText("Pause");
+		pauseResumeButton.setEnabled(false);
+		startResetButton = new JButton();
+		startResetButton.setText("Start");
 
 		boidsNumberInput = new JTextField(10);
 		boidsNumberInput.setEnabled(true);
@@ -54,16 +58,24 @@ public class BoidsView implements ChangeListener {
         });
 
 		pauseResumeButton.addActionListener(e -> {
-            pauseResumeButton.setText(pauseResumeButton.getText() == "Resume" ? "Pause" : "Resume");
+            pauseResumeButton.setText(pauseResumeButton.getText().equals("Resume") ? "Pause" : "Resume");
             model.setIsRunning(!model.getIsRunning());
             boidsNumberInput.setEnabled(!model.getIsRunning());
         });
 
-		startStopButton.addActionListener(e -> {
-			startStopButton.setText(startStopButton.getText() == "Start" ? "Stop" : "Start");
+		startResetButton.addActionListener(e -> {
+			if(startResetButton.getText().equals("Start")) {
+				startResetButton.setText("Reset");
+				model.setIsRunning(true);
+				pauseResumeButton.setEnabled(true);
+
+			} else {
+				// reset the simulation
+			}
+
 		});
 
-		controlPanel.add(startStopButton);
+		controlPanel.add(startResetButton);
 		controlPanel.add(pauseResumeButton);
 		controlPanel.add(new JLabel("Boids number"));
 		controlPanel.add(boidsNumberInput);

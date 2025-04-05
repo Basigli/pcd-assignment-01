@@ -1,9 +1,6 @@
 package pcd.ass01;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+import pcd.ass01.model.BoidsModel;
 
 public class BoidUpdateWorker extends Thread{
     private int numberOfThreds;

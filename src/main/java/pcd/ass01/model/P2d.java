@@ -1,4 +1,4 @@
-package pcd.ass01;
+package pcd.ass01.model;
 
 /**
  *
@@ -6,7 +6,7 @@ package pcd.ass01;
  * objects are completely state-less
  *
  */
-class P2d {
+public class P2d {
     public double x;
     public double y;
     public P2d(double x, double y) {

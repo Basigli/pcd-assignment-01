@@ -1,8 +1,11 @@
-package pcd.ass01;
+package pcd.ass01.model;
+
+import pcd.ass01.model.Boid;
+import pcd.ass01.model.P2d;
+import pcd.ass01.model.V2d;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class BoidsModel {
     
@@ -49,7 +52,6 @@ public class BoidsModel {
     }
 
     public synchronized void setNboids(int nboids) {
-
         int currentNboids = this.boids.size();
         System.out.println(currentNboids);
         if (nboids > currentNboids)

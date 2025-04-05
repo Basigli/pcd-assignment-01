@@ -1,5 +1,7 @@
 package pcd.ass01;
 
+import pcd.ass01.model.BoidsModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

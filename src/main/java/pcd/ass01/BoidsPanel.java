@@ -1,5 +1,8 @@
 package pcd.ass01;
 
+import pcd.ass01.model.Boid;
+import pcd.ass01.model.BoidsModel;
+
 import javax.swing.*;
 import java.awt.*;
 
