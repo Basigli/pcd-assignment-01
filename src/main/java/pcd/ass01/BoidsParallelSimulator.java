@@ -3,14 +3,11 @@ package pcd.ass01;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CyclicBarrier;
 
 public class BoidsParallelSimulator {
-
     private BoidsModel model;
     private Optional<BoidsView> view;
     private final int THREAD_NUMBER = Runtime.getRuntime().availableProcessors();
-
     private final MyCyclicBarrier velocityBarrier = new MyCyclicBarrier(THREAD_NUMBER/*,
             () -> System.out.println("Velocity updated!")*/);
     private final MyCyclicBarrier positionBarrier = new MyCyclicBarrier(THREAD_NUMBER,
@@ -46,7 +43,6 @@ public class BoidsParallelSimulator {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     private void updateView(){
