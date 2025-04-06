@@ -74,6 +74,7 @@ public class BoidsView implements ChangeListener {
 			if(startResetButton.getText().equals("Start")) {
 				simulator.notifyStarted();
 				startResetButton.setText("Reset");
+				pauseResumeButton.setText("Pause");
 				pauseResumeButton.setEnabled(true);
 				boidsNumberInput.setEnabled(false);
 			} else if (startResetButton.getText().equals("Reset")){
