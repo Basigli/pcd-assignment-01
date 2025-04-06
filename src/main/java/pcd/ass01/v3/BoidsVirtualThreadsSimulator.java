@@ -79,9 +79,11 @@ public class BoidsVirtualThreadsSimulator implements BoidsSimulator {
                 this.model.setNboids(nBoids);
                 this.createVirtualThreads();
             }
+            /*
             if (!this.pauseFlag.isSet()) {
                 this.updateView();
             }
+            */
         }
     }
 
