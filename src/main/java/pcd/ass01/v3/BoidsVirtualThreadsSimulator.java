@@ -72,6 +72,7 @@ public class BoidsVirtualThreadsSimulator implements BoidsSimulator {
         createVirtualThreads();
         while (true) {
             if (resetFlag.isSet()) {
+                waitForThreadsToTerminate();
                 resetFlag.reset();
                 pauseFlag.set();
                 int nBoids = model.getNboids();
@@ -123,6 +124,15 @@ public class BoidsVirtualThreadsSimulator implements BoidsSimulator {
             }
         }
         t0 = System.currentTimeMillis();
+    }
+    private void waitForThreadsToTerminate() {
+        for (Thread worker : workers) {
+            try {
+                worker.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
 }
