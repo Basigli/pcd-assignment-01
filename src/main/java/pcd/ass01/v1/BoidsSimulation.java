@@ -1,4 +1,4 @@
-package pcd.ass01.commmon;
+package pcd.ass01.v1;
 
 import pcd.ass01.commmon.BoidsView;
 import pcd.ass01.commmon.BoidsModel;
