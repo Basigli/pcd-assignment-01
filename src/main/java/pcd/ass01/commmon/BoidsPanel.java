@@ -1,9 +1,5 @@
 package pcd.ass01.commmon;
 
-import pcd.ass01.commmon.BoidsView;
-import pcd.ass01.v1.model.Boid;
-import pcd.ass01.v1.model.BoidsModel;
-
 import javax.swing.*;
 import java.awt.*;
 

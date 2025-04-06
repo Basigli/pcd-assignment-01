@@ -1,7 +1,5 @@
 package pcd.ass01.commmon;
 
-import pcd.ass01.v1.model.BoidsModel;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

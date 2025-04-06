@@ -7,7 +7,7 @@
  * Use is subject to license terms.
  *
  */
-package pcd.ass01.v1.model;
+package pcd.ass01.commmon;
 
 /**
  *
@@ -15,7 +15,7 @@ package pcd.ass01.v1.model;
  * objects are completely state-less
  *
  */
-class V2d {
+public class V2d {
     public double x;
     public double y;
     public V2d(double x,double y) {

@@ -1,12 +1,11 @@
-package pcd.ass01.v1;
+package pcd.ass01.commmon;
 
 import pcd.ass01.commmon.BoidsView;
-import pcd.ass01.v1.model.BoidsModel;
+import pcd.ass01.commmon.BoidsModel;
+import pcd.ass01.v1.BoidsParallelSimulator;
 
 public class BoidsSimulation {
-
 	final static int N_BOIDS = 1500;
-
 	final static double SEPARATION_WEIGHT = 1.0;
     final static double ALIGNMENT_WEIGHT = 1.0;
     final static double COHESION_WEIGHT = 1.0;
@@ -32,6 +31,5 @@ public class BoidsSimulation {
     	var sim = new BoidsParallelSimulator(model);
     	var view = new BoidsView(model, sim, SCREEN_WIDTH, SCREEN_HEIGHT);
 		sim.attachView(view);
-    	//sim.runSimulation();
     }
 }
