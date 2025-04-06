@@ -75,6 +75,7 @@ public class BoidsExecutorSimulator implements BoidsSimulator {
         while(true) {
             if (resetFlag.isSet()) {
                 resetFlag.reset();
+                pauseFlag.set();
                 int nBoids = model.getNboids();
                 this.model.setNboids(0);
                 this.model.setNboids(nBoids);
