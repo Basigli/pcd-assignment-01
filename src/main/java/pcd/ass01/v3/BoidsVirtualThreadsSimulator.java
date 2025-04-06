@@ -62,6 +62,10 @@ public class BoidsVirtualThreadsSimulator implements BoidsSimulator {
 
     @Override
     public synchronized void notifyBoidsChanged() {
+        int virtualThreadsNumber = model.getNboids();
+        this.computeVelocityBarrier.setParties(virtualThreadsNumber);
+        this.updateVelocityBarrier.setParties(virtualThreadsNumber);
+        this.positionBarrier.setParties(virtualThreadsNumber);
         this.createVirtualThreads();
     }
     public void runSimulation() {
@@ -69,6 +73,7 @@ public class BoidsVirtualThreadsSimulator implements BoidsSimulator {
         while (true) {
             if (resetFlag.isSet()) {
                 resetFlag.reset();
+                pauseFlag.set();
                 int nBoids = model.getNboids();
                 this.model.setNboids(0);
                 this.model.setNboids(nBoids);
@@ -82,7 +87,9 @@ public class BoidsVirtualThreadsSimulator implements BoidsSimulator {
 
     private void createVirtualThreads() {
         var boids = model.getBoids();
-
+        if(!this.workers.isEmpty()) {
+            this.workers = new ArrayList<>();
+        }
         boids.forEach(boid -> {
             Thread worker = Thread.ofVirtual().unstarted(new BoidUpdateWorker(model,
                     boid,
