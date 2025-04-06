@@ -1,4 +1,4 @@
-package pcd.ass01.v1;
+package pcd.ass01.commmon;
 
 import pcd.ass01.v1.model.BoidsModel;
 
@@ -20,9 +20,9 @@ public class BoidsView implements ChangeListener {
 	private BoidsModel model;
 	private int width, height;
 
-	private BoidsParallelSimulator simulator;
+	private BoidsSimulator simulator;
 	
-	public BoidsView(BoidsModel model, BoidsParallelSimulator simulator, int width, int height) {
+	public BoidsView(BoidsModel model, BoidsSimulator simulator, int width, int height) {
 		this.model = model;
 		this.simulator = simulator;
 		this.width = width;

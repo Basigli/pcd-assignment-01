@@ -1,13 +1,15 @@
 package pcd.ass01.v1;
 
+import pcd.ass01.commmon.BoidsSimulator;
+import pcd.ass01.commmon.BoidsView;
 import pcd.ass01.v1.model.BoidsModel;
-import pcd.ass01.v1.model.Flag;
+import pcd.ass01.commmon.Flag;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BoidsParallelSimulator {
+public class BoidsParallelSimulator implements BoidsSimulator {
     private BoidsModel model;
     private Optional<BoidsView> view;
     private final int THREAD_NUMBER = Runtime.getRuntime().availableProcessors();

@@ -1,5 +1,6 @@
-package pcd.ass01.v1;
+package pcd.ass01.commmon;
 
+import pcd.ass01.commmon.BoidsView;
 import pcd.ass01.v1.model.Boid;
 import pcd.ass01.v1.model.BoidsModel;
 
@@ -8,7 +9,7 @@ import java.awt.*;
 
 public class BoidsPanel extends JPanel {
 
-	private BoidsView view; 
+	private BoidsView view;
 	private BoidsModel model;
     private int framerate;
 

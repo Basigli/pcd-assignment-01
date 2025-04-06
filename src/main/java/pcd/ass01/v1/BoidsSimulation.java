@@ -1,5 +1,6 @@
 package pcd.ass01.v1;
 
+import pcd.ass01.commmon.BoidsView;
 import pcd.ass01.v1.model.BoidsModel;
 
 public class BoidsSimulation {
