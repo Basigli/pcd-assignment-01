@@ -1,4 +1,4 @@
-package pcd.ass01.model;
+package pcd.ass01.v1.model;
 public class Flag {
     private boolean flag;
 

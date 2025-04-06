@@ -1,7 +1,7 @@
-package pcd.ass01;
+package pcd.ass01.v1;
 
-import pcd.ass01.model.BoidsModel;
-import pcd.ass01.model.Flag;
+import pcd.ass01.v1.model.BoidsModel;
+import pcd.ass01.v1.model.Flag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,9 @@ public class BoidsParallelSimulator {
     private BoidsModel model;
     private Optional<BoidsView> view;
     private final int THREAD_NUMBER = Runtime.getRuntime().availableProcessors();
-    private final MyCyclicBarrier velocityBarrier = new MyCyclicBarrier(THREAD_NUMBER/*,
+    private final MyCyclicBarrier computeVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER/*,
+            () -> System.out.println("Velocity computed!")*/);
+    private final MyCyclicBarrier updateVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER/*,
             () -> System.out.println("Velocity updated!")*/);
     private final MyCyclicBarrier positionBarrier = new MyCyclicBarrier(THREAD_NUMBER,
             this::updateView);
@@ -42,7 +44,7 @@ public class BoidsParallelSimulator {
         var boids = model.getBoids();
         pauseFlag.reset();
         for (int i = 0; i < THREAD_NUMBER; i++) {
-            boidUpdateWorkers.add(new BoidUpdateWorker(THREAD_NUMBER, i, model, velocityBarrier, positionBarrier, resetFlag, pauseFlag));
+            boidUpdateWorkers.add(new BoidUpdateWorker(THREAD_NUMBER, i, model, computeVelocityBarrier, updateVelocityBarrier, positionBarrier, resetFlag, pauseFlag));
         }
         for (var worker : boidUpdateWorkers) {
             worker.start();

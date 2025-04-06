@@ -1,6 +1,6 @@
-package pcd.ass01;
+package pcd.ass01.v1;
 
-import pcd.ass01.model.BoidsModel;
+import pcd.ass01.v1.model.BoidsModel;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -68,15 +68,12 @@ public class BoidsView implements ChangeListener {
 				boidsNumberInput.setEnabled(true);
 			}
 			pauseResumeButton.setText(pauseResumeButton.getText().equals("Resume") ? "Pause" : "Resume");
-            // model.setIsRunning(!model.getIsRunning());
-
         });
 
 		startResetButton.addActionListener(e -> {
 			if(startResetButton.getText().equals("Start")) {
 				simulator.notifyStarted();
 				startResetButton.setText("Reset");
-				// model.setIsRunning(true);
 				pauseResumeButton.setEnabled(true);
 				boidsNumberInput.setEnabled(false);
 			} else if (startResetButton.getText().equals("Reset")){

@@ -1,7 +1,7 @@
-package pcd.ass01;
+package pcd.ass01.v1;
 
-import pcd.ass01.model.BoidsModel;
-import pcd.ass01.model.Flag;
+import pcd.ass01.v1.model.BoidsModel;
+import pcd.ass01.v1.model.Flag;
 
 public class BoidUpdateWorker extends Thread{
     private int numberOfThreds;
@@ -10,12 +10,14 @@ public class BoidUpdateWorker extends Thread{
     private Flag pauseFlag;
     private BoidsModel model;
 
-    private final MyCyclicBarrier velocityBarrier;
+    private final MyCyclicBarrier computeVelocityBarrier;
+    private final MyCyclicBarrier updateVelocityBarrier;
     private final MyCyclicBarrier positionBarrier;
     public BoidUpdateWorker(int numberOfThreads,
                                 int threadIndex,
                                 BoidsModel model,
-                                MyCyclicBarrier velocityBarrier,
+                                MyCyclicBarrier computeVelocityBarrier,
+                                MyCyclicBarrier updateVelocityBarrier,
                                 MyCyclicBarrier positionBarrier,
                                 Flag resetFlag,
                                 Flag pauseFlag) {
@@ -23,7 +25,8 @@ public class BoidUpdateWorker extends Thread{
         this.numberOfThreds = numberOfThreads;
         this.threadIndex = threadIndex;
         this.model = model;
-        this.velocityBarrier = velocityBarrier;
+        this.computeVelocityBarrier = computeVelocityBarrier;
+        this.updateVelocityBarrier = updateVelocityBarrier;
         this.positionBarrier = positionBarrier;
         this.resetFlag = resetFlag;
         this.pauseFlag = pauseFlag;
@@ -39,23 +42,25 @@ public class BoidUpdateWorker extends Thread{
                 var boids = model.getBoids(threadIndex * (boidsNumber / numberOfThreds),(boidsNumber / numberOfThreds) * (threadIndex + 1));
 
                 if (firstTime) {
-                    for (var boid : boids)
-                        boid.updateVelocity(model);
+                    boids.forEach(boid -> boid.computeVelocity(model));
                     firstTime = false;
                 } else {
                     try {
                         positionBarrier.await();
-                        for (var boid : boids)
-                            boid.updateVelocity(model);
+                        boids.forEach(boid -> boid.computeVelocity(model));
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-
                 try {
-                    velocityBarrier.await();
-                    for (var boid : boids)
-                        boid.updatePos(model);
+                    computeVelocityBarrier.await();
+                    boids.forEach(boid -> boid.updateVelocity(model));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    updateVelocityBarrier.await();
+                    boids.forEach(boid -> boid.updatePos(model));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

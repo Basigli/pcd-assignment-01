@@ -1,4 +1,4 @@
-package pcd.ass01;
+package pcd.ass01.v1;
 import java.util.concurrent.Semaphore;
 
 public class MyCyclicBarrier {

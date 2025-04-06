@@ -1,8 +1,4 @@
-package pcd.ass01.model;
-
-import pcd.ass01.model.Boid;
-import pcd.ass01.model.P2d;
-import pcd.ass01.model.V2d;
+package pcd.ass01.v1.model;
 
 import java.util.ArrayList;
 import java.util.List;
