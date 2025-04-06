@@ -12,7 +12,7 @@ import java.util.Optional;
 public class BoidsParallelSimulator implements BoidsSimulator {
     private BoidsModel model;
     private Optional<BoidsView> view;
-    private final int THREAD_NUMBER = Runtime.getRuntime().availableProcessors();
+    private final int THREAD_NUMBER = Runtime.getRuntime().availableProcessors() + 1;
     private final MyCyclicBarrier computeVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER/*,
             () -> System.out.println("Velocity computed!")*/);
     private final MyCyclicBarrier updateVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER/*,
