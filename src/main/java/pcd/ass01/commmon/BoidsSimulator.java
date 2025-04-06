@@ -8,4 +8,6 @@ public interface BoidsSimulator {
     void notifyResumed();
     void notifyResetted();
 
+    void notifyBoidsChanged();
+
 }

@@ -5,6 +5,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
 
 public class BoidsView implements ChangeListener {
@@ -55,6 +56,7 @@ public class BoidsView implements ChangeListener {
 		boidsNumberInput.addActionListener(e -> {
             String input = boidsNumberInput.getText();
             model.setNboids(Integer.parseInt(input));
+			simulator.notifyBoidsChanged();
         });
 
 		pauseResumeButton.addActionListener(e -> {
@@ -117,9 +119,15 @@ public class BoidsView implements ChangeListener {
 	}
 	
 	public void update(int frameRate) {
-		boidsPanel.setFrameRate(frameRate);
-		boidsPanel.repaint();
-	}
+		try {
+			SwingUtilities.invokeAndWait(() -> {
+				boidsPanel.setFrameRate(frameRate);
+				boidsPanel.repaint();
+			});
+		} catch (InterruptedException | InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
+    }
 
 
 

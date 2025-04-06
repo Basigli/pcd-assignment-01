@@ -31,6 +31,7 @@ public class BoidsExecutorSimulator implements BoidsSimulator {
         this.view = Optional.empty();
         this.resetFlag = new Flag();
         this.pauseFlag = new Flag();
+        this.pauseFlag.set();
     }
 
     private void waitForCompletion(List<Future<Void>> futures) throws ExecutionException, InterruptedException {
@@ -64,9 +65,21 @@ public class BoidsExecutorSimulator implements BoidsSimulator {
     }
 
     @Override
-    public void notifyStarted() {
+    public synchronized void notifyStarted() {
+        pauseFlag.reset();
+
+    }
+
+    public void runSimulation() {
         createTasks();
-        while(!this.resetFlag.isSet()) {
+        while(true) {
+            if (resetFlag.isSet()) {
+                resetFlag.reset();
+                int nBoids = model.getNboids();
+                this.model.setNboids(0);
+                this.model.setNboids(nBoids);
+                this.createTasks();
+            }
             if (!this.pauseFlag.isSet()){
                 try {
                     waitForCompletion(executor.invokeAll(computeVelocityTasks));
@@ -80,22 +93,26 @@ public class BoidsExecutorSimulator implements BoidsSimulator {
                 this.updateView();
             }
         }
-
     }
 
     @Override
-    public void notifyStopped() {
-
+    public synchronized void notifyStopped() {
+        pauseFlag.set();
     }
 
     @Override
-    public void notifyResumed() {
-
+    public synchronized void notifyResumed() {
+        pauseFlag.reset();
     }
 
     @Override
-    public void notifyResetted() {
+    public synchronized void notifyResetted() {
+        resetFlag.set();
+    }
 
+    @Override
+    public synchronized void notifyBoidsChanged() {
+        createTasks();
     }
 
     private void updateView(){

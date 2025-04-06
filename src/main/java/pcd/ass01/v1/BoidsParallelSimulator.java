@@ -65,6 +65,9 @@ public class BoidsParallelSimulator implements BoidsSimulator {
         resetFlag.set();
     }
 
+    @Override
+    public synchronized void notifyBoidsChanged() {}
+
     private void updateView(){
         if (view.isPresent()) {
             view.get().update(framerate);
