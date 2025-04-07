@@ -40,9 +40,11 @@ public class BoidsParallelSimulator implements BoidsSimulator {
 
     public synchronized void notifyStarted() {
         List<BoidUpdateWorker> boidUpdateWorkers = new ArrayList<BoidUpdateWorker>();
-        int nBoids = model.getNboids();
-        model.setNboids(0);
-        model.setNboids(nBoids);
+        if (resetFlag.isSet()) {
+            int nBoids = model.getNboids();
+            model.setNboids(0);
+            model.setNboids(nBoids);
+        }
         var boids = model.getBoids();
         pauseFlag.reset();
         for (int i = 0; i < THREAD_NUMBER; i++) {
