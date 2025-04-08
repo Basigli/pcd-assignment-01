@@ -10,7 +10,7 @@ public class BoidUpdateWorker extends Thread{
     private Flag resetFlag;
     private Flag pauseFlag;
     private BoidsModel model;
-    private List<Boid> boidsPartition;
+    private volatile List<Boid> boidsPartition;
 
     private final MyCyclicBarrier computeVelocityBarrier;
     private final MyCyclicBarrier updateVelocityBarrier;
@@ -42,8 +42,6 @@ public class BoidUpdateWorker extends Thread{
         resetFlag.reset();
         while (!resetFlag.isSet()) {
             if (!this.pauseFlag.isSet()) {
-
-                //var boids = model.getBoids(threadIndex * (boidsNumber / numberOfThreds),(boidsNumber / numberOfThreds) * (threadIndex + 1));
                 var boids = this.boidsPartition;
                 if (firstTime) {
                     boids.forEach(boid -> boid.computeVelocity(model));
@@ -71,6 +69,4 @@ public class BoidUpdateWorker extends Thread{
             }
         }
     }
-
-
 }
