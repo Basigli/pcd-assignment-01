@@ -25,6 +25,7 @@ public class BoidsParallelSimulator implements BoidsSimulator {
 
     private Flag resetFlag;
     private Flag pauseFlag;
+    List<BoidUpdateWorker> boidUpdateWorkers;
 
     public BoidsParallelSimulator(BoidsModel model) {
         this.model = model;
@@ -39,7 +40,7 @@ public class BoidsParallelSimulator implements BoidsSimulator {
 
 
     public synchronized void notifyStarted() {
-        List<BoidUpdateWorker> boidUpdateWorkers = new ArrayList<BoidUpdateWorker>();
+        this.boidUpdateWorkers = new ArrayList<BoidUpdateWorker>();
         if (resetFlag.isSet()) {
             int nBoids = model.getNboids();
             model.setNboids(0);
@@ -47,10 +48,12 @@ public class BoidsParallelSimulator implements BoidsSimulator {
         }
         var boids = model.getBoids();
         pauseFlag.reset();
+        int boidsNumber = boids.size();
         for (int i = 0; i < THREAD_NUMBER; i++) {
-            boidUpdateWorkers.add(new BoidUpdateWorker(THREAD_NUMBER, i, model, computeVelocityBarrier, updateVelocityBarrier, positionBarrier, resetFlag, pauseFlag));
+            var boidsPartition = model.getBoids(i * (boidsNumber / THREAD_NUMBER),(boidsNumber / THREAD_NUMBER) * (i + 1));
+            this.boidUpdateWorkers.add(new BoidUpdateWorker(boidsPartition, model, computeVelocityBarrier, updateVelocityBarrier, positionBarrier, resetFlag, pauseFlag));
         }
-        for (var worker : boidUpdateWorkers) {
+        for (var worker : this.boidUpdateWorkers) {
             worker.start();
         }
     }
@@ -68,7 +71,15 @@ public class BoidsParallelSimulator implements BoidsSimulator {
     }
 
     @Override
-    public synchronized void notifyBoidsChanged() {}
+    public synchronized void notifyBoidsChanged() {
+        int boidsNumber = model.getNboids();
+        int i = 0;
+        for (var worker : this.boidUpdateWorkers) {
+            var boidsPartition = model.getBoids(i * (boidsNumber / THREAD_NUMBER),(boidsNumber / THREAD_NUMBER) * (i + 1));
+            worker.setBoidsPartition(boidsPartition);
+            i++;
+        }
+    }
 
     private void updateView(){
         if (view.isPresent()) {

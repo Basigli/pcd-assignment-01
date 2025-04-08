@@ -58,13 +58,13 @@ public class BoidsModel {
             }
         }
     }
-    public synchronized int getNboids() {return boids.size();}
+    public int getNboids() {return boids.size();}
 
 
     public List<Boid> getBoids(){
     	return boids;
     }
-    public synchronized List<Boid> getBoids(int lowerBound, int upperBound){
+    public List<Boid> getBoids(int lowerBound, int upperBound){
         return boids.subList(lowerBound, upperBound);
     }
     

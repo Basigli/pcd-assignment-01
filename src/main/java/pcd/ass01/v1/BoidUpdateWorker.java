@@ -1,20 +1,21 @@
 package pcd.ass01.v1;
 
+import pcd.ass01.commmon.Boid;
 import pcd.ass01.commmon.BoidsModel;
 import pcd.ass01.commmon.Flag;
 
+import java.util.List;
+
 public class BoidUpdateWorker extends Thread{
-    private int numberOfThreds;
-    private int threadIndex;
     private Flag resetFlag;
     private Flag pauseFlag;
     private BoidsModel model;
+    private List<Boid> boidsPartition;
 
     private final MyCyclicBarrier computeVelocityBarrier;
     private final MyCyclicBarrier updateVelocityBarrier;
     private final MyCyclicBarrier positionBarrier;
-    public BoidUpdateWorker(int numberOfThreads,
-                                int threadIndex,
+    public BoidUpdateWorker(    List<Boid> boidsPartition,
                                 BoidsModel model,
                                 MyCyclicBarrier computeVelocityBarrier,
                                 MyCyclicBarrier updateVelocityBarrier,
@@ -22,8 +23,7 @@ public class BoidUpdateWorker extends Thread{
                                 Flag resetFlag,
                                 Flag pauseFlag) {
         super();
-        this.numberOfThreds = numberOfThreads;
-        this.threadIndex = threadIndex;
+        this.boidsPartition = boidsPartition;
         this.model = model;
         this.computeVelocityBarrier = computeVelocityBarrier;
         this.updateVelocityBarrier = updateVelocityBarrier;
@@ -32,15 +32,19 @@ public class BoidUpdateWorker extends Thread{
         this.pauseFlag = pauseFlag;
     }
 
+    public void setBoidsPartition(List<Boid> boidsPartition) {
+        this.boidsPartition = boidsPartition;
+    }
+
 
     public void run() {
         boolean firstTime = true;
         resetFlag.reset();
         while (!resetFlag.isSet()) {
             if (!this.pauseFlag.isSet()) {
-                var boidsNumber = model.getNboids();
-                var boids = model.getBoids(threadIndex * (boidsNumber / numberOfThreds),(boidsNumber / numberOfThreds) * (threadIndex + 1));
 
+                //var boids = model.getBoids(threadIndex * (boidsNumber / numberOfThreds),(boidsNumber / numberOfThreds) * (threadIndex + 1));
+                var boids = this.boidsPartition;
                 if (firstTime) {
                     boids.forEach(boid -> boid.computeVelocity(model));
                     firstTime = false;
