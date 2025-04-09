@@ -1,0 +1,46 @@
+package pcd.ass01.test.v3B;
+import java.util.concurrent.Semaphore;
+
+public class MyCyclicBarrier {
+    private int parties;
+
+
+
+    private int count = 0;
+    private Semaphore mutex = new Semaphore(1);
+    private Semaphore barrier = new Semaphore(0);
+    private Semaphore reset = new Semaphore(1);
+    private final Runnable barrierAction;
+
+    public MyCyclicBarrier(int parties, Runnable barrierAction) {
+        this.parties = parties;
+        this.barrierAction = barrierAction;
+    }
+    public MyCyclicBarrier(int parties) {
+        this.parties = parties;
+        this.barrierAction = null;
+    }
+    public int getParties() {
+        return parties;
+    }
+
+    public void setParties(int parties) {
+        this.parties = parties;
+    }
+
+    public void await() throws InterruptedException {
+        mutex.acquire();
+        count++;
+        if (count == parties) {
+            reset.acquire();
+            if (barrierAction != null) {
+                barrierAction.run();
+            }
+            barrier.release(parties);
+            count = 0;
+            reset.release();
+        }
+        mutex.release();
+        barrier.acquire();
+    }
+}
