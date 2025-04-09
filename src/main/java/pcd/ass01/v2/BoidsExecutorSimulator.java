@@ -31,7 +31,6 @@ public class BoidsExecutorSimulator implements BoidsSimulator {
         this.view = Optional.empty();
         this.resetFlag = new Flag();
         this.pauseFlag = new Flag();
-        this.pauseFlag.set();
     }
 
     private void waitForCompletion(List<Future<Void>> futures) throws ExecutionException, InterruptedException {
@@ -62,6 +61,7 @@ public class BoidsExecutorSimulator implements BoidsSimulator {
     @Override
     public void attachView(BoidsView view) {
         this.view = Optional.of(view);
+        this.pauseFlag.set();
     }
 
     @Override

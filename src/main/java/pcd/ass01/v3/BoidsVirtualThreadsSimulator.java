@@ -29,7 +29,6 @@ public class BoidsVirtualThreadsSimulator implements BoidsSimulator {
         this.view = Optional.empty();
         this.resetFlag = new Flag();
         this.pauseFlag = new Flag();
-        this.pauseFlag.set();
         int virtualThreadsNumber = model.getNboids();
         computeVelocityBarrier = new MyCyclicBarrier(virtualThreadsNumber);
         updateVelocityBarrier = new MyCyclicBarrier(virtualThreadsNumber);
@@ -38,6 +37,7 @@ public class BoidsVirtualThreadsSimulator implements BoidsSimulator {
     @Override
     public void attachView(BoidsView view) {
         this.view = Optional.of(view);
+        this.pauseFlag.set();
     }
 
     @Override
