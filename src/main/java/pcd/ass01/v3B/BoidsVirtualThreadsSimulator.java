@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BoidsParallelSimulator implements BoidsSimulator {
+public class BoidsVirtualThreadsSimulator implements BoidsSimulator {
     private BoidsModel model;
     private Optional<BoidsView> view;
     private final int THREAD_NUMBER = 40;
@@ -25,7 +25,7 @@ public class BoidsParallelSimulator implements BoidsSimulator {
     private Flag pauseFlag;
     List<BoidUpdateWorker> boidUpdateWorkers;
 
-    public BoidsParallelSimulator(BoidsModel model) {
+    public BoidsVirtualThreadsSimulator(BoidsModel model) {
         this.model = model;
         this.view = Optional.empty();
         this.resetFlag = new Flag();
