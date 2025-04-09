@@ -33,14 +33,15 @@ public class BoidsPanel extends JPanel {
         var boids = model.getBoids();
 
         g.setColor(Color.BLUE);
+
         for (Boid boid : boids) {
-        	var x = boid.getPos().x;
-        	var y = boid.getPos().y;
-        	int px = (int)(w/2 + x*xScale);
-        	int py = (int)(h/2 - y*xScale);
-            g.fillOval(px,py, 5, 5);
+            var x = boid.getPos().x;
+            var y = boid.getPos().y;
+            int px = (int) (w / 2 + x * xScale);
+            int py = (int) (h / 2 - y * xScale);
+            g.fillOval(px, py, 5, 5);
         }
-        
+
         g.setColor(Color.BLACK);
         g.drawString("Num. Boids: " + model.getNboids(), 10, 25);
         g.drawString("Framerate: " + framerate, 10, 40);

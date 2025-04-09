@@ -1,8 +1,8 @@
-package pcd.ass01.v1;
+package pcd.ass01.v3B;
 
+import pcd.ass01.commmon.BoidsModel;
 import pcd.ass01.commmon.BoidsSimulator;
 import pcd.ass01.commmon.BoidsView;
-import pcd.ass01.commmon.BoidsModel;
 import pcd.ass01.commmon.Flag;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class BoidsParallelSimulator implements BoidsSimulator {
     private BoidsModel model;
     private Optional<BoidsView> view;
-    private final int THREAD_NUMBER = Runtime.getRuntime().availableProcessors() + 1;
+    private final int THREAD_NUMBER = 40;
     private final MyCyclicBarrier computeVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER);
     private final MyCyclicBarrier updateVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER);
     private final MyCyclicBarrier positionBarrier = new MyCyclicBarrier(THREAD_NUMBER,
@@ -47,12 +47,16 @@ public class BoidsParallelSimulator implements BoidsSimulator {
         var boids = model.getBoids();
         pauseFlag.reset();
         int boidsNumber = boids.size();
+
+        var threads = new ArrayList<Thread>();
         for (int i = 0; i < THREAD_NUMBER; i++) {
             var boidsPartition = model.getBoids(i * (boidsNumber / THREAD_NUMBER),(boidsNumber / THREAD_NUMBER) * (i + 1));
-            this.boidUpdateWorkers.add(new BoidUpdateWorker(boidsPartition, model, computeVelocityBarrier, updateVelocityBarrier, positionBarrier, resetFlag, pauseFlag));
+            var worker = new BoidUpdateWorker(boidsPartition, model, computeVelocityBarrier, updateVelocityBarrier, positionBarrier, resetFlag, pauseFlag);
+            threads.add(Thread.ofVirtual().unstarted(worker));
+            this.boidUpdateWorkers.add(worker);
         }
-        for (var worker : this.boidUpdateWorkers) {
-            worker.start();
+        for (var thread : threads) {
+            thread.start();
         }
     }
 

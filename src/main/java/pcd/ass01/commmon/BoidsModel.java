@@ -62,10 +62,10 @@ public class BoidsModel {
 
 
     public List<Boid> getBoids(){
-    	return boids;
+        return new ArrayList<>(boids);
     }
     public List<Boid> getBoids(int lowerBound, int upperBound){
-        return boids.subList(lowerBound, upperBound);
+        return new ArrayList<>(boids.subList(lowerBound, upperBound));
     }
     
     public double getMinX() {
