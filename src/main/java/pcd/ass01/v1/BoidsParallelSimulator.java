@@ -13,10 +13,8 @@ public class BoidsParallelSimulator implements BoidsSimulator {
     private BoidsModel model;
     private Optional<BoidsView> view;
     private final int THREAD_NUMBER = Runtime.getRuntime().availableProcessors() + 1;
-    private final MyCyclicBarrier computeVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER/*,
-            () -> System.out.println("Velocity computed!")*/);
-    private final MyCyclicBarrier updateVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER/*,
-            () -> System.out.println("Velocity updated!")*/);
+    private final MyCyclicBarrier computeVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER);
+    private final MyCyclicBarrier updateVelocityBarrier = new MyCyclicBarrier(THREAD_NUMBER);
     private final MyCyclicBarrier positionBarrier = new MyCyclicBarrier(THREAD_NUMBER,
             this::updateView);
     private static final int FRAMERATE = 25; //25
